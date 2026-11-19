@@ -1,0 +1,14 @@
+{
+  "name": "Scenarij 3 – Pokrenuti servisi i gubitak veze",
+  "description": "Baza je pokrenuta, ali su joj podaci oštećeni; postoji backup, ostalo je ispravno. Aplikacija je pokrenuta, ispravna i povezana s bazom. Zahvat na bazi ruši vezu, koju nakon oporavka treba ponovno uspostaviti.",
+  "initial_state": [
+    "BazaPokrenuta",
+    "DiskIspravan",
+    "BackupBaze",
+    "KonfigBazeIspravna",
+    "AplikacijaPokrenuta",
+    "InstalacijaIspravna",
+    "KonfigAppIspravna",
+    "VezaUspostavljena"
+  ]
+}

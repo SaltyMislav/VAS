@@ -1,0 +1,12 @@
+{
+  "name": "Scenarij 4 – Neostvariv oporavak",
+  "description": "Podaci baze su oštećeni, a nema ni backupa ni replike. Ostalo je ispravno. Sustav mora prijaviti da zajednički cilj nije ostvariv.",
+  "initial_state": [
+    "BazaZaustavljena",
+    "DiskIspravan",
+    "KonfigBazeIspravna",
+    "AplikacijaPokrenuta",
+    "InstalacijaIspravna",
+    "KonfigAppIspravna"
+  ]
+}

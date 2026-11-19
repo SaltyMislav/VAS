@@ -1,0 +1,39 @@
+[21:15:01.034] SCENARIJ: Scenarij 4 – Neostvariv oporavak
+[21:15:01.035] OPIS: Podaci baze su oštećeni, a nema ni backupa ni replike. Ostalo je ispravno. Sustav mora prijaviti da zajednički cilj nije ostvariv.
+[21:15:01.131] AgentNadzor POČETNO STANJE: {AplikacijaPokrenuta, BazaZaustavljena, DiskIspravan, InstalacijaIspravna, KonfigAppIspravna, KonfigBazeIspravna}
+[21:15:01.131] AgentNadzor ZAJEDNIČKI CILJ G: {AplikacijaDostupna, BazaSpremna, InstalacijaIspravna, KonfigAppIspravna, KonfigBazeIspravna, PodaciIspravni}
+[21:15:01.279] AgentAplikacija LOKALNI CILJ: ['KonfigAppIspravna', 'InstalacijaIspravna', 'AplikacijaDostupna', 'BazaSpremna'], vanjski predikati: ['BazaSpremna']
+[21:15:01.279] AgentAplikacija -> AgentNadzor GET_STATE {}
+[21:15:01.279] AgentBaza LOKALNI CILJ: ['BazaSpremna', 'PodaciIspravni', 'KonfigBazeIspravna']
+[21:15:01.279] AgentBaza -> AgentNadzor GET_STATE {}
+[21:15:01.279] AgentNadzor <- AgentAplikacija GET_STATE {}
+[21:15:01.279] AgentNadzor -> AgentAplikacija STATE {"state": ["AplikacijaPokrenuta", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna", "KonfigAppIspravna", "KonfigBazeIspravna"]}
+[21:15:01.279] AgentNadzor <- AgentBaza GET_STATE {}
+[21:15:01.279] AgentNadzor -> AgentBaza STATE {"state": ["AplikacijaPokrenuta", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna", "KonfigAppIspravna", "KonfigBazeIspravna"]}
+[21:15:01.279] AgentAplikacija <- AgentNadzor STATE {"state": ["AplikacijaPokrenuta", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna", "KonfigAppIspravna", "KonfigBazeIspravna"]}
+[21:15:01.279] AgentAplikacija PLAN iz stanja {AplikacijaPokrenuta, BazaZaustavljena, DiskIspravan, InstalacijaIspravna, KonfigAppIspravna, KonfigBazeIspravna}
+[21:15:01.279] AgentAplikacija PLAN: [WAIT:BazaSpremna, PoveziSBazom, ProvjeriRadSustava]
+[21:15:01.279] AgentAplikacija ČEKAM vanjski predikat BazaSpremna
+[21:15:01.280] AgentBaza <- AgentNadzor STATE {"state": ["AplikacijaPokrenuta", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna", "KonfigAppIspravna", "KonfigBazeIspravna"]}
+[21:15:01.280] AgentBaza PLAN iz stanja {AplikacijaPokrenuta, BazaZaustavljena, DiskIspravan, InstalacijaIspravna, KonfigAppIspravna, KonfigBazeIspravna}
+[21:15:01.280] AgentBaza PLAN: None (cilj nije ostvariv)
+[21:15:01.280] AgentBaza ODUSTAJEM: STRIPS nije našao plan za cilj ['BazaSpremna', 'PodaciIspravni', 'KonfigBazeIspravna']
+[21:15:01.280] AgentBaza -> AgentNadzor PLAN_FAILED {"agent": "AgentBaza", "reason": "STRIPS nije našao plan za cilj ['BazaSpremna', 'PodaciIspravni', 'KonfigBazeIspravna']"}
+[21:15:01.280] AgentBaza -> AgentNadzor GOAL_CHECK {"agent": "AgentBaza"}
+[21:15:01.280] AgentNadzor <- AgentBaza PLAN_FAILED {"agent": "AgentBaza", "reason": "STRIPS nije našao plan za cilj ['BazaSpremna', 'PodaciIspravni', 'KonfigBazeIspravna']"}
+[21:15:01.280] AgentNadzor -> AgentAplikacija DB_UNREACHABLE {"reason": "STRIPS nije našao plan za cilj ['BazaSpremna', 'PodaciIspravni', 'KonfigBazeIspravna']"}
+[21:15:01.280] AgentNadzor <- AgentBaza GOAL_CHECK {"agent": "AgentBaza"}
+[21:15:01.280] AgentAplikacija <- AgentNadzor DB_UNREACHABLE {"reason": "STRIPS nije našao plan za cilj ['BazaSpremna', 'PodaciIspravni', 'KonfigBazeIspravna']"}
+[21:15:01.280] AgentAplikacija ODUSTAJEM: baza nije dostupna (DB_UNREACHABLE)
+[21:15:01.280] AgentAplikacija -> AgentNadzor PLAN_FAILED {"agent": "AgentAplikacija", "reason": "baza nije dostupna (DB_UNREACHABLE)"}
+[21:15:01.280] AgentAplikacija -> AgentNadzor GOAL_CHECK {"agent": "AgentAplikacija"}
+[21:15:01.280] AgentNadzor <- AgentAplikacija PLAN_FAILED {"agent": "AgentAplikacija", "reason": "baza nije dostupna (DB_UNREACHABLE)"}
+[21:15:01.280] AgentNadzor ISHODI AGENATA: {'AgentBaza': 'PLAN_FAILED', 'AgentAplikacija': 'PLAN_FAILED'}
+[21:15:01.280] AgentNadzor ZAVRŠNO STANJE: {AplikacijaPokrenuta, BazaZaustavljena, DiskIspravan, InstalacijaIspravna, KonfigAppIspravna, KonfigBazeIspravna}
+[21:15:01.280] AgentNadzor KONAČNI REZULTAT: NEOSTVARIVO: nedostaje {AplikacijaDostupna, BazaSpremna, PodaciIspravni}
+[21:15:01.280] AgentNadzor -> AgentBaza GOAL_RESULT {"satisfied": false, "missing": ["AplikacijaDostupna", "BazaSpremna", "PodaciIspravni"]}
+[21:15:01.280] AgentNadzor <- AgentAplikacija GOAL_CHECK {"agent": "AgentAplikacija"}
+[21:15:01.280] AgentNadzor -> AgentAplikacija GOAL_RESULT {"satisfied": false, "missing": ["AplikacijaDostupna", "BazaSpremna", "PodaciIspravni"]}
+[21:15:01.280] AgentBaza <- AgentNadzor GOAL_RESULT {"satisfied": false, "missing": ["AplikacijaDostupna", "BazaSpremna", "PodaciIspravni"]}
+[21:15:01.281] AgentAplikacija <- AgentNadzor GOAL_RESULT {"satisfied": false, "missing": ["AplikacijaDostupna", "BazaSpremna", "PodaciIspravni"]}
+[21:15:01.282] REZULTAT: NEOSTVARIVO: nedostaje {AplikacijaDostupna, BazaSpremna, PodaciIspravni}

@@ -1,0 +1,106 @@
+[21:14:56.878] SCENARIJ: Scenarij 1 – Oštećeni podaci i neispravna konfiguracija
+[21:14:56.878] OPIS: Disk baze je ispravan, podaci nisu; postoji backup baze, konfiguracija baze traži popravak. Aplikacija je pokrenuta i ispravno instalirana, ali joj je konfiguracija neispravna; postoji backup konfiguracije.
+[21:14:57.062] AgentNadzor POČETNO STANJE: {AplikacijaPokrenuta, BackupBaze, BackupKonfigApp, BazaZaustavljena, DiskIspravan, InstalacijaIspravna}
+[21:14:57.062] AgentNadzor ZAJEDNIČKI CILJ G: {AplikacijaDostupna, BazaSpremna, InstalacijaIspravna, KonfigAppIspravna, KonfigBazeIspravna, PodaciIspravni}
+[21:14:57.275] AgentAplikacija LOKALNI CILJ: ['KonfigAppIspravna', 'InstalacijaIspravna', 'AplikacijaDostupna', 'BazaSpremna'], vanjski predikati: ['BazaSpremna']
+[21:14:57.275] AgentAplikacija -> AgentNadzor GET_STATE {}
+[21:14:57.275] AgentBaza LOKALNI CILJ: ['BazaSpremna', 'PodaciIspravni', 'KonfigBazeIspravna']
+[21:14:57.275] AgentBaza -> AgentNadzor GET_STATE {}
+[21:14:57.276] AgentNadzor <- AgentAplikacija GET_STATE {}
+[21:14:57.276] AgentNadzor -> AgentAplikacija STATE {"state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna"]}
+[21:14:57.276] AgentNadzor <- AgentBaza GET_STATE {}
+[21:14:57.276] AgentNadzor -> AgentBaza STATE {"state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna"]}
+[21:14:57.276] AgentAplikacija <- AgentNadzor STATE {"state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna"]}
+[21:14:57.276] AgentAplikacija PLAN iz stanja {AplikacijaPokrenuta, BackupBaze, BackupKonfigApp, BazaZaustavljena, DiskIspravan, InstalacijaIspravna}
+[21:14:57.276] AgentAplikacija PLAN: [ZaustaviAplikaciju, VratiKonfigIzBackupa, PokreniAplikaciju, WAIT:BazaSpremna, PoveziSBazom, ProvjeriRadSustava]
+[21:14:57.276] AgentBaza <- AgentNadzor STATE {"state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna"]}
+[21:14:57.276] AgentBaza PLAN iz stanja {AplikacijaPokrenuta, BackupBaze, BackupKonfigApp, BazaZaustavljena, DiskIspravan, InstalacijaIspravna}
+[21:14:57.277] AgentBaza PLAN: [ObnoviIzBackupa, PopraviKonfigBaze, PokreniBazu, ProvjeriIntegritet, OznaciSpremnom]
+[21:14:57.327] AgentAplikacija -> AgentNadzor ACTION_REQUEST {"agent": "AgentAplikacija", "action": "ZaustaviAplikaciju"}
+[21:14:57.327] AgentBaza -> AgentNadzor ACTION_REQUEST {"agent": "AgentBaza", "action": "ObnoviIzBackupa"}
+[21:14:57.327] AgentNadzor <- AgentAplikacija ACTION_REQUEST {"agent": "AgentAplikacija", "action": "ZaustaviAplikaciju"}
+[21:14:57.327] AgentNadzor POTVRĐENO ZaustaviAplikaciju (AgentAplikacija): +['AplikacijaZaustavljena'] -['AplikacijaDostupna', 'AplikacijaPokrenuta', 'VezaUspostavljena'] => {AplikacijaZaustavljena, BackupBaze, BackupKonfigApp, BazaZaustavljena, DiskIspravan, InstalacijaIspravna}
+[21:14:57.327] AgentNadzor -> AgentAplikacija ACTION_CONFIRM {"action": "ZaustaviAplikaciju", "state": ["AplikacijaZaustavljena", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna"]}
+[21:14:57.327] AgentNadzor <- AgentBaza ACTION_REQUEST {"agent": "AgentBaza", "action": "ObnoviIzBackupa"}
+[21:14:57.327] AgentNadzor POTVRĐENO ObnoviIzBackupa (AgentBaza): +['PodaciIspravni'] -[] => {AplikacijaZaustavljena, BackupBaze, BackupKonfigApp, BazaZaustavljena, DiskIspravan, InstalacijaIspravna, PodaciIspravni}
+[21:14:57.327] AgentNadzor -> AgentBaza ACTION_CONFIRM {"action": "ObnoviIzBackupa", "state": ["AplikacijaZaustavljena", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna", "PodaciIspravni"]}
+[21:14:57.327] AgentAplikacija <- AgentNadzor ACTION_CONFIRM {"action": "ZaustaviAplikaciju", "state": ["AplikacijaZaustavljena", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna"]}
+[21:14:57.327] AgentAplikacija IZVRŠENO ZaustaviAplikaciju
+[21:14:57.327] AgentBaza <- AgentNadzor ACTION_CONFIRM {"action": "ObnoviIzBackupa", "state": ["AplikacijaZaustavljena", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna", "PodaciIspravni"]}
+[21:14:57.327] AgentBaza IZVRŠENO ObnoviIzBackupa
+[21:14:57.378] AgentAplikacija -> AgentNadzor ACTION_REQUEST {"agent": "AgentAplikacija", "action": "VratiKonfigIzBackupa"}
+[21:14:57.378] AgentBaza -> AgentNadzor ACTION_REQUEST {"agent": "AgentBaza", "action": "PopraviKonfigBaze"}
+[21:14:57.378] AgentNadzor <- AgentAplikacija ACTION_REQUEST {"agent": "AgentAplikacija", "action": "VratiKonfigIzBackupa"}
+[21:14:57.378] AgentNadzor POTVRĐENO VratiKonfigIzBackupa (AgentAplikacija): +['KonfigAppIspravna'] -[] => {AplikacijaZaustavljena, BackupBaze, BackupKonfigApp, BazaZaustavljena, DiskIspravan, InstalacijaIspravna, KonfigAppIspravna, PodaciIspravni}
+[21:14:57.378] AgentNadzor -> AgentAplikacija ACTION_CONFIRM {"action": "VratiKonfigIzBackupa", "state": ["AplikacijaZaustavljena", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna", "KonfigAppIspravna", "PodaciIspravni"]}
+[21:14:57.378] AgentNadzor <- AgentBaza ACTION_REQUEST {"agent": "AgentBaza", "action": "PopraviKonfigBaze"}
+[21:14:57.378] AgentNadzor POTVRĐENO PopraviKonfigBaze (AgentBaza): +['KonfigBazeIspravna'] -[] => {AplikacijaZaustavljena, BackupBaze, BackupKonfigApp, BazaZaustavljena, DiskIspravan, InstalacijaIspravna, KonfigAppIspravna, KonfigBazeIspravna, PodaciIspravni}
+[21:14:57.378] AgentNadzor -> AgentBaza ACTION_CONFIRM {"action": "PopraviKonfigBaze", "state": ["AplikacijaZaustavljena", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.378] AgentAplikacija <- AgentNadzor ACTION_CONFIRM {"action": "VratiKonfigIzBackupa", "state": ["AplikacijaZaustavljena", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna", "KonfigAppIspravna", "PodaciIspravni"]}
+[21:14:57.378] AgentAplikacija IZVRŠENO VratiKonfigIzBackupa
+[21:14:57.378] AgentBaza <- AgentNadzor ACTION_CONFIRM {"action": "PopraviKonfigBaze", "state": ["AplikacijaZaustavljena", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.378] AgentBaza IZVRŠENO PopraviKonfigBaze
+[21:14:57.428] AgentAplikacija -> AgentNadzor ACTION_REQUEST {"agent": "AgentAplikacija", "action": "PokreniAplikaciju"}
+[21:14:57.429] AgentBaza -> AgentNadzor ACTION_REQUEST {"agent": "AgentBaza", "action": "PokreniBazu"}
+[21:14:57.429] AgentNadzor <- AgentAplikacija ACTION_REQUEST {"agent": "AgentAplikacija", "action": "PokreniAplikaciju"}
+[21:14:57.429] AgentNadzor POTVRĐENO PokreniAplikaciju (AgentAplikacija): +['AplikacijaPokrenuta'] -['AplikacijaZaustavljena'] => {AplikacijaPokrenuta, BackupBaze, BackupKonfigApp, BazaZaustavljena, DiskIspravan, InstalacijaIspravna, KonfigAppIspravna, KonfigBazeIspravna, PodaciIspravni}
+[21:14:57.429] AgentNadzor -> AgentAplikacija ACTION_CONFIRM {"action": "PokreniAplikaciju", "state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.429] AgentNadzor <- AgentBaza ACTION_REQUEST {"agent": "AgentBaza", "action": "PokreniBazu"}
+[21:14:57.429] AgentNadzor POTVRĐENO PokreniBazu (AgentBaza): +['BazaPokrenuta'] -['BazaZaustavljena'] => {AplikacijaPokrenuta, BackupBaze, BackupKonfigApp, BazaPokrenuta, DiskIspravan, InstalacijaIspravna, KonfigAppIspravna, KonfigBazeIspravna, PodaciIspravni}
+[21:14:57.429] AgentNadzor -> AgentBaza ACTION_CONFIRM {"action": "PokreniBazu", "state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "DiskIspravan", "InstalacijaIspravna", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.429] AgentAplikacija <- AgentNadzor ACTION_CONFIRM {"action": "PokreniAplikaciju", "state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaZaustavljena", "DiskIspravan", "InstalacijaIspravna", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.429] AgentAplikacija IZVRŠENO PokreniAplikaciju
+[21:14:57.429] AgentAplikacija ČEKAM vanjski predikat BazaSpremna
+[21:14:57.429] AgentBaza <- AgentNadzor ACTION_CONFIRM {"action": "PokreniBazu", "state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "DiskIspravan", "InstalacijaIspravna", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.429] AgentBaza IZVRŠENO PokreniBazu
+[21:14:57.479] AgentBaza -> AgentNadzor ACTION_REQUEST {"agent": "AgentBaza", "action": "ProvjeriIntegritet"}
+[21:14:57.480] AgentNadzor <- AgentBaza ACTION_REQUEST {"agent": "AgentBaza", "action": "ProvjeriIntegritet"}
+[21:14:57.480] AgentNadzor POTVRĐENO ProvjeriIntegritet (AgentBaza): +['IntegritetPotvrden'] -[] => {AplikacijaPokrenuta, BackupBaze, BackupKonfigApp, BazaPokrenuta, DiskIspravan, InstalacijaIspravna, IntegritetPotvrden, KonfigAppIspravna, KonfigBazeIspravna, PodaciIspravni}
+[21:14:57.480] AgentNadzor -> AgentBaza ACTION_CONFIRM {"action": "ProvjeriIntegritet", "state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "DiskIspravan", "InstalacijaIspravna", "IntegritetPotvrden", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.480] AgentBaza <- AgentNadzor ACTION_CONFIRM {"action": "ProvjeriIntegritet", "state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "DiskIspravan", "InstalacijaIspravna", "IntegritetPotvrden", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.480] AgentBaza IZVRŠENO ProvjeriIntegritet
+[21:14:57.530] AgentBaza -> AgentNadzor ACTION_REQUEST {"agent": "AgentBaza", "action": "OznaciSpremnom"}
+[21:14:57.530] AgentNadzor <- AgentBaza ACTION_REQUEST {"agent": "AgentBaza", "action": "OznaciSpremnom"}
+[21:14:57.530] AgentNadzor POTVRĐENO OznaciSpremnom (AgentBaza): +['BazaSpremna'] -[] => {AplikacijaPokrenuta, BackupBaze, BackupKonfigApp, BazaPokrenuta, BazaSpremna, DiskIspravan, InstalacijaIspravna, IntegritetPotvrden, KonfigAppIspravna, KonfigBazeIspravna, PodaciIspravni}
+[21:14:57.530] AgentNadzor -> AgentBaza ACTION_CONFIRM {"action": "OznaciSpremnom", "state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "BazaSpremna", "DiskIspravan", "InstalacijaIspravna", "IntegritetPotvrden", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.530] AgentNadzor -> AgentAplikacija DB_READY {"state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "BazaSpremna", "DiskIspravan", "InstalacijaIspravna", "IntegritetPotvrden", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.530] AgentBaza <- AgentNadzor ACTION_CONFIRM {"action": "OznaciSpremnom", "state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "BazaSpremna", "DiskIspravan", "InstalacijaIspravna", "IntegritetPotvrden", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.530] AgentBaza IZVRŠENO OznaciSpremnom
+[21:14:57.530] AgentBaza lokalni cilj postignut
+[21:14:57.530] AgentBaza -> AgentNadzor LOCAL_GOAL_DONE {"agent": "AgentBaza"}
+[21:14:57.530] AgentBaza -> AgentNadzor GOAL_CHECK {"agent": "AgentBaza"}
+[21:14:57.531] AgentAplikacija <- AgentNadzor DB_READY {"state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "BazaSpremna", "DiskIspravan", "InstalacijaIspravna", "IntegritetPotvrden", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.531] AgentAplikacija čekanje gotovo, replaniram iz svježeg stanja
+[21:14:57.531] AgentAplikacija -> AgentNadzor GET_STATE {}
+[21:14:57.531] AgentNadzor <- AgentBaza LOCAL_GOAL_DONE {"agent": "AgentBaza"}
+[21:14:57.531] AgentNadzor <- AgentBaza GOAL_CHECK {"agent": "AgentBaza"}
+[21:14:57.531] AgentNadzor <- AgentAplikacija GET_STATE {}
+[21:14:57.531] AgentNadzor -> AgentAplikacija STATE {"state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "BazaSpremna", "DiskIspravan", "InstalacijaIspravna", "IntegritetPotvrden", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.531] AgentAplikacija <- AgentNadzor STATE {"state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "BazaSpremna", "DiskIspravan", "InstalacijaIspravna", "IntegritetPotvrden", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni"]}
+[21:14:57.531] AgentAplikacija REPLAN #1 iz stanja {AplikacijaPokrenuta, BackupBaze, BackupKonfigApp, BazaPokrenuta, BazaSpremna, DiskIspravan, InstalacijaIspravna, IntegritetPotvrden, KonfigAppIspravna, KonfigBazeIspravna, PodaciIspravni}
+[21:14:57.531] AgentAplikacija REPLAN #1: [PoveziSBazom, ProvjeriRadSustava]
+[21:14:57.581] AgentAplikacija -> AgentNadzor ACTION_REQUEST {"agent": "AgentAplikacija", "action": "PoveziSBazom"}
+[21:14:57.581] AgentNadzor <- AgentAplikacija ACTION_REQUEST {"agent": "AgentAplikacija", "action": "PoveziSBazom"}
+[21:14:57.581] AgentNadzor POTVRĐENO PoveziSBazom (AgentAplikacija): +['VezaUspostavljena'] -[] => {AplikacijaPokrenuta, BackupBaze, BackupKonfigApp, BazaPokrenuta, BazaSpremna, DiskIspravan, InstalacijaIspravna, IntegritetPotvrden, KonfigAppIspravna, KonfigBazeIspravna, PodaciIspravni, VezaUspostavljena}
+[21:14:57.581] AgentNadzor -> AgentAplikacija ACTION_CONFIRM {"action": "PoveziSBazom", "state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "BazaSpremna", "DiskIspravan", "InstalacijaIspravna", "IntegritetPotvrden", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni", "VezaUspostavljena"]}
+[21:14:57.582] AgentAplikacija <- AgentNadzor ACTION_CONFIRM {"action": "PoveziSBazom", "state": ["AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "BazaSpremna", "DiskIspravan", "InstalacijaIspravna", "IntegritetPotvrden", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni", "VezaUspostavljena"]}
+[21:14:57.582] AgentAplikacija IZVRŠENO PoveziSBazom
+[21:14:57.632] AgentAplikacija -> AgentNadzor ACTION_REQUEST {"agent": "AgentAplikacija", "action": "ProvjeriRadSustava"}
+[21:14:57.632] AgentNadzor <- AgentAplikacija ACTION_REQUEST {"agent": "AgentAplikacija", "action": "ProvjeriRadSustava"}
+[21:14:57.632] AgentNadzor POTVRĐENO ProvjeriRadSustava (AgentAplikacija): +['AplikacijaDostupna'] -[] => {AplikacijaDostupna, AplikacijaPokrenuta, BackupBaze, BackupKonfigApp, BazaPokrenuta, BazaSpremna, DiskIspravan, InstalacijaIspravna, IntegritetPotvrden, KonfigAppIspravna, KonfigBazeIspravna, PodaciIspravni, VezaUspostavljena}
+[21:14:57.632] AgentNadzor -> AgentAplikacija ACTION_CONFIRM {"action": "ProvjeriRadSustava", "state": ["AplikacijaDostupna", "AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "BazaSpremna", "DiskIspravan", "InstalacijaIspravna", "IntegritetPotvrden", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni", "VezaUspostavljena"]}
+[21:14:57.632] AgentAplikacija <- AgentNadzor ACTION_CONFIRM {"action": "ProvjeriRadSustava", "state": ["AplikacijaDostupna", "AplikacijaPokrenuta", "BackupBaze", "BackupKonfigApp", "BazaPokrenuta", "BazaSpremna", "DiskIspravan", "InstalacijaIspravna", "IntegritetPotvrden", "KonfigAppIspravna", "KonfigBazeIspravna", "PodaciIspravni", "VezaUspostavljena"]}
+[21:14:57.632] AgentAplikacija IZVRŠENO ProvjeriRadSustava
+[21:14:57.632] AgentAplikacija lokalni cilj postignut
+[21:14:57.632] AgentAplikacija -> AgentNadzor LOCAL_GOAL_DONE {"agent": "AgentAplikacija"}
+[21:14:57.632] AgentAplikacija -> AgentNadzor GOAL_CHECK {"agent": "AgentAplikacija"}
+[21:14:57.632] AgentNadzor <- AgentAplikacija LOCAL_GOAL_DONE {"agent": "AgentAplikacija"}
+[21:14:57.632] AgentNadzor ISHODI AGENATA: {'AgentBaza': 'LOCAL_GOAL_DONE', 'AgentAplikacija': 'LOCAL_GOAL_DONE'}
+[21:14:57.632] AgentNadzor ZAVRŠNO STANJE: {AplikacijaDostupna, AplikacijaPokrenuta, BackupBaze, BackupKonfigApp, BazaPokrenuta, BazaSpremna, DiskIspravan, InstalacijaIspravna, IntegritetPotvrden, KonfigAppIspravna, KonfigBazeIspravna, PodaciIspravni, VezaUspostavljena}
+[21:14:57.632] AgentNadzor KONAČNI REZULTAT: USPJEH (zajednički cilj G ⊆ stanje)
+[21:14:57.633] AgentNadzor -> AgentBaza GOAL_RESULT {"satisfied": true, "missing": []}
+[21:14:57.633] AgentNadzor <- AgentAplikacija GOAL_CHECK {"agent": "AgentAplikacija"}
+[21:14:57.633] AgentNadzor -> AgentAplikacija GOAL_RESULT {"satisfied": true, "missing": []}
+[21:14:57.633] AgentBaza <- AgentNadzor GOAL_RESULT {"satisfied": true, "missing": []}
+[21:14:57.633] AgentAplikacija <- AgentNadzor GOAL_RESULT {"satisfied": true, "missing": []}
+[21:14:57.635] REZULTAT: USPJEH

@@ -1,0 +1,12 @@
+{
+  "name": "Scenarij 1 – Oštećeni podaci i neispravna konfiguracija",
+  "description": "Disk baze je ispravan, podaci nisu; postoji backup baze, konfiguracija baze traži popravak. Aplikacija je pokrenuta i ispravno instalirana, ali joj je konfiguracija neispravna; postoji backup konfiguracije.",
+  "initial_state": [
+    "BazaZaustavljena",
+    "DiskIspravan",
+    "BackupBaze",
+    "AplikacijaPokrenuta",
+    "InstalacijaIspravna",
+    "BackupKonfigApp"
+  ]
+}
