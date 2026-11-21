@@ -125,7 +125,6 @@ class RecoveryAgent(Agent):
             await a.go.wait()   # da se nijedna obavijest ne izgubi prije spajanja svih agenata
             a.log(f"LOKALNI CILJ: {list(a.goal)}"
                   + (f", vanjski predikati: {sorted(a.external)}" if a.external else ""))
-            ok, reason = await self.recover()
             while True:
                 a.goal_lost.clear()
                 ok, reason = await self.recover()
@@ -137,7 +136,6 @@ class RecoveryAgent(Agent):
                     a.log(f"ODUSTAJEM: {reason}")
                     await P.send(self, P.msg(a.nadzor_jid, P.PLAN_FAILED,
                                              agent=a.display_name, reason=reason))
-                # provjera zajedničkog cilja; Nadzor odgovara kad oba agenta jave ishod
                 await P.send(self, P.msg(a.nadzor_jid, P.GOAL_CHECK, agent=a.display_name))
                 res = asyncio.ensure_future(a.goal_result.wait())
                 lost = asyncio.ensure_future(a.goal_lost.wait())

@@ -28,9 +28,9 @@ async def run_scenario(path, trace, delay, timeout, delay_baza=None):
 
     nadzor = NadzorAgent(P.JID_NADZOR, P.PASSWORD, scenario["initial_state"])
     baza = RecoveryAgent(P.JID_BAZA, P.PASSWORD, domain.AGENT_BAZA, domain.OPS_BAZA,
-                         domain.G_BAZA, domain.EXTERNAL_BAZA, trace=trace, step_delay=delay if delay_baza is None else delay_baza)
+                        domain.G_BAZA, domain.EXTERNAL_BAZA, trace=trace, step_delay=delay if delay_baza is None else delay_baza)
     app = RecoveryAgent(P.JID_APP, P.PASSWORD, domain.AGENT_APP, domain.OPS_APP,
-                        domain.G_APP, domain.EXTERNAL_APP, trace=trace, step_delay=delay if delay_baza is None else delay_baza)
+                        domain.G_APP, domain.EXTERNAL_APP, trace=trace, step_delay=delay)
     agents = [nadzor, baza, app]
     code = 1
     try:
@@ -84,7 +84,8 @@ def main():
     box = {}
 
     async def runner():
-        box["code"] = await run_scenario(args.scenario, args.trace, args.delay, args.timeout)
+        box["code"] = await run_scenario(args.scenario, args.trace, args.delay, args.timeout,
+                                         args.delay_baza)
 
     spade.run(runner())
     return box.get("code", 1)
