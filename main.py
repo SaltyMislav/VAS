@@ -11,7 +11,7 @@ import sys
 import domain
 
 
-async def run_scenario(path, trace, delay, timeout):
+async def run_scenario(path, trace, delay, timeout, delay_baza=None):
     import protocol as P
     from agents.nadzor import NadzorAgent
     from agents.recovery import RecoveryAgent
@@ -28,9 +28,9 @@ async def run_scenario(path, trace, delay, timeout):
 
     nadzor = NadzorAgent(P.JID_NADZOR, P.PASSWORD, scenario["initial_state"])
     baza = RecoveryAgent(P.JID_BAZA, P.PASSWORD, domain.AGENT_BAZA, domain.OPS_BAZA,
-                         domain.G_BAZA, domain.EXTERNAL_BAZA, trace=trace, step_delay=delay)
+                         domain.G_BAZA, domain.EXTERNAL_BAZA, trace=trace, step_delay=delay if delay_baza is None else delay_baza)
     app = RecoveryAgent(P.JID_APP, P.PASSWORD, domain.AGENT_APP, domain.OPS_APP,
-                        domain.G_APP, domain.EXTERNAL_APP, trace=trace, step_delay=delay)
+                        domain.G_APP, domain.EXTERNAL_APP, trace=trace, step_delay=delay if delay_baza is None else delay_baza)
     agents = [nadzor, baza, app]
     code = 1
     try:
@@ -65,6 +65,8 @@ def main():
     ap.add_argument("--trace", action="store_true", help="ispiši tijek STRIPS pretrage")
     ap.add_argument("--delay", type=float, default=0.05,
                     help="simulirano trajanje jedne akcije u sekundama (zadano 0.05)")
+    ap.add_argument("--delay-baza", type=float, default=None,
+                    help="zasebno trajanje akcije AgentBaza (za reprodukciju utrke)")
     ap.add_argument("--timeout", type=float, default=60, help="globalni timeout u sekundama")
     args = ap.parse_args()
 

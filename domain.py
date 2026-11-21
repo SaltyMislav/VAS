@@ -85,6 +85,7 @@ OWNER.update({op.name: AGENT_APP for op in OPS_APP})
 G_BAZA = ("BazaSpremna", "PodaciIspravni", "KonfigBazeIspravna")
 G_APP = ("KonfigAppIspravna", "InstalacijaIspravna", "AplikacijaDostupna", "BazaSpremna")
 G = set(G_BAZA) | set(G_APP)
+LOCAL_GOALS = {AGENT_BAZA: set(G_BAZA), AGENT_APP: set(G_APP)}
 
 # Predikati koje agent ne može sam postići, nego ih samo čeka.
 EXTERNAL_BAZA = frozenset()

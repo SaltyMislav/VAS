@@ -5,7 +5,7 @@ from spade.agent import Agent
 from spade.behaviour import CyclicBehaviour
 
 import protocol as P
-from domain import AGENT_BAZA, ALL_OPS, G, OWNER
+from domain import AGENT_BAZA, ALL_OPS, G, LOCAL_GOALS, OWNER
 
 
 class NadzorAgent(Agent):
@@ -22,6 +22,9 @@ class NadzorAgent(Agent):
 
     def log(self, text):
         P.log(f"{P.agent_name(self.jid)} {text}")
+
+    def local_goal_holds(self, who):
+        return LOCAL_GOALS[who] <= self.state
 
     def goal_status(self):
         missing = sorted(G - self.state)
@@ -73,9 +76,26 @@ class NadzorAgent(Agent):
             await P.send(self, P.reply(m, P.ACTION_CONFIRM, action=action, state=sorted(a.state)))
             if not was_ready and "BazaSpremna" in a.state:
                 await P.send(self, P.msg(a.app_jid, P.DB_READY, state=sorted(a.state)))
+            # akcija je mogla poništiti lokalni cilj agenta koji je već javio uspjeh
+            for agent, kind in list(a.outcomes.items()):
+                if kind == P.LOCAL_GOAL_DONE and not a.local_goal_holds(agent):
+                    del a.outcomes[agent]
+                    await self.goal_lost(agent, f"akcija {action} poništila je lokalni cilj")
 
         async def on_LOCAL_GOAL_DONE(self, m, body):
-            await self.outcome(body.get("agent"), P.LOCAL_GOAL_DONE)
+            who = body.get("agent")
+            # Nadzor ne vjeruje poruci: provjerava lokalni cilj nad službenim stanjem
+            if not self.agent.local_goal_holds(who):
+                await self.goal_lost(who, "lokalni cilj ne vrijedi u službenom stanju")
+                return
+            await self.outcome(who, P.LOCAL_GOAL_DONE)
+
+        async def goal_lost(self, who, reason):
+            a = self.agent
+            missing = sorted(LOCAL_GOALS[who] - a.state)
+            a.log(f"USPJEH {who} NE VRIJEDI: {reason}; nedostaje {missing}")
+            jid = P.JID_BAZA if who == AGENT_BAZA else a.app_jid
+            await P.send(self, P.msg(jid, P.LOCAL_GOAL_LOST, reason=reason, missing=missing))
 
         async def on_PLAN_FAILED(self, m, body):
             who = body.get("agent")

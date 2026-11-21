@@ -1,0 +1,5 @@
+{"name": "Scenarij 5 - lažno spremna baza (demo odbijanja)",
+ "description": "Baza je označena spremnom, ali podaci su oštećeni; postoji backup.",
+ "initial_state": ["BazaPokrenuta", "BazaSpremna", "IntegritetPotvrden", "DiskIspravan",
+   "KonfigBazeIspravna", "BackupBaze", "AplikacijaPokrenuta", "InstalacijaIspravna",
+   "KonfigAppIspravna"]}

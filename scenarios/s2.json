@@ -1,5 +1,5 @@
 {
-  "name": "Scenarij 2 – Neispravan disk i oštećena instalacija",
+  "name": "Scenarij 2 - Neispravan disk i oštećena instalacija",
   "description": "Disk baze je neispravan, postoji rezervni disk; nema backupa, ali postoji replika. Aplikacija nije pokrenuta, instalacija i konfiguracija su neispravne; dostupni su repozitorij paketa i predložak konfiguracije.",
   "initial_state": [
     "BazaZaustavljena",

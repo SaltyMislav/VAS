@@ -30,6 +30,7 @@ class RecoveryAgent(Agent):
         self.db_event = asyncio.Event()   # stigla je DB_READY ili DB_UNREACHABLE
         self.db_unreachable = False
         self.goal_result = asyncio.Event()
+        self.goal_lost = asyncio.Event()
         self.done = asyncio.Event()
         self.go = asyncio.Event()         # main.py ga postavlja kad su svi agenti spojeni
 
@@ -47,6 +48,9 @@ class RecoveryAgent(Agent):
             mtype, _ = P.parse(m)
             if mtype == P.GOAL_RESULT:
                 self.agent.goal_result.set()
+                return
+            if mtype == P.LOCAL_GOAL_LOST:
+                self.agent.goal_lost.set()
                 return
             if mtype == P.DB_UNREACHABLE:
                 self.agent.db_unreachable = True
@@ -122,23 +126,35 @@ class RecoveryAgent(Agent):
             a.log(f"LOKALNI CILJ: {list(a.goal)}"
                   + (f", vanjski predikati: {sorted(a.external)}" if a.external else ""))
             ok, reason = await self.recover()
-            if ok:
-                a.log("lokalni cilj postignut")
-                await P.send(self, P.msg(a.nadzor_jid, P.LOCAL_GOAL_DONE, agent=a.display_name))
-            else:
-                a.log(f"ODUSTAJEM: {reason}")
-                await P.send(self, P.msg(a.nadzor_jid, P.PLAN_FAILED,
-                                         agent=a.display_name, reason=reason))
-            # provjera zajedničkog cilja; Nadzor odgovara kad oba agenta jave ishod
-            await P.send(self, P.msg(a.nadzor_jid, P.GOAL_CHECK, agent=a.display_name))
-            try:
-                await asyncio.wait_for(a.goal_result.wait(), WAIT_TIMEOUT)
-            except asyncio.TimeoutError:
-                a.log("nema GOAL_RESULT od Nadzora")
+            while True:
+                a.goal_lost.clear()
+                ok, reason = await self.recover()
+                if ok:
+                    a.log("lokalni cilj postignut")
+                    await P.send(self, P.msg(a.nadzor_jid, P.LOCAL_GOAL_DONE,
+                                             agent=a.display_name))
+                else:
+                    a.log(f"ODUSTAJEM: {reason}")
+                    await P.send(self, P.msg(a.nadzor_jid, P.PLAN_FAILED,
+                                             agent=a.display_name, reason=reason))
+                # provjera zajedničkog cilja; Nadzor odgovara kad oba agenta jave ishod
+                await P.send(self, P.msg(a.nadzor_jid, P.GOAL_CHECK, agent=a.display_name))
+                res = asyncio.ensure_future(a.goal_result.wait())
+                lost = asyncio.ensure_future(a.goal_lost.wait())
+                done, pending = await asyncio.wait({res, lost}, timeout=WAIT_TIMEOUT,
+                                                   return_when=asyncio.FIRST_COMPLETED)
+                for t in pending:
+                    t.cancel()
+                if not done:
+                    a.log("nema GOAL_RESULT od Nadzora")
+                if ok and a.goal_lost.is_set() and not a.goal_result.is_set():
+                    a.log("Nadzor javlja da lokalni cilj više ne vrijedi -> ponovni oporavak")
+                    continue
+                break
             a.done.set()
 
     async def setup(self):
         self.add_behaviour(self.Obavijesti(),
-                           P.template(P.DB_READY, P.DB_UNREACHABLE, P.GOAL_RESULT))
+                           P.template(P.DB_READY, P.DB_UNREACHABLE, P.GOAL_RESULT, P.LOCAL_GOAL_LOST))
         self.add_behaviour(self.Oporavak(),
                            P.template(P.STATE, P.ACTION_CONFIRM, P.ACTION_REJECT))
